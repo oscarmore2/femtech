@@ -15,7 +15,7 @@ from .exchange_api_factory import ExchangeAPIFactory
 accountPair = {} # finger-print:Account pair map
 signalPair = {} # finger-print:Signal pair map
 
-signalQueue = queue()
+signalQueue = queue.Queue()
 con = get_redis_connection("default")
 
 def resMsg(data):
