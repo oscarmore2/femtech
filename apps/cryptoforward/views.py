@@ -5,7 +5,7 @@ from .formatMsg import ParseTradingFormat
 from .models import DepositAccount, ExcangeSignalTrading
 from django_q.tasks import async_task, result
 from django.views.decorators.csrf import csrf_exempt
-from Queue import Queue
+from queue import queue
 import requests
 from django.core.cache import cache
 from django_redis import get_redis_connection
@@ -15,7 +15,7 @@ from .exchange_api_factory import ExchangeAPIFactory
 accountPair = {} # finger-print:Account pair map
 signalPair = {} # finger-print:Signal pair map
 
-signalQueue = Queue()
+signalQueue = queue()
 con = get_redis_connection("default")
 
 def resMsg(data):
