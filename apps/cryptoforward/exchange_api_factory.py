@@ -1,5 +1,5 @@
 from .models import ExchangeConfig
-from broker import trader
+from .broker import trader
 # from .broker.okx_trader import OKXAPI
 # from .broker.binance_trader import BinanceAPI
 # from .broker.bybit_trader import BybitAPI
@@ -15,13 +15,13 @@ class ExchangeAPIFactory:
         exchange_channel = config.exchangeInfo
         
         if exchange_channel.name.lower() == 'okx':
-            from broker import okx_trader as okxTrader
+            from .broker import okx_trader as okxTrader
             return okxTrader.OKXAPI(config)
         elif exchange_channel.name.lower() == 'kraken':
-            from broker import karken_trader as karkenTrader
+            from .broker import karken_trader as karkenTrader
             return karkenTrader.KrakenAPI(config)
         elif exchange_channel.name.lower() == 'hotcoin':
-            from broker import hotcoin_trader as hotcoinTrader
+            from .broker import hotcoin_trader as hotcoinTrader
             return hotcoinTrader.HotcoinAPI(config)
         elif exchange_channel.name.lower() == 'coinbase':
             from broker import coninbase_trader as coinbaseTrader
