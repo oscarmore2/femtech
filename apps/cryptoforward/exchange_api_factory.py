@@ -1,12 +1,12 @@
 from .models import ExchangeConfig
-from broker.trader import ExchangeAPI
-# from broker.okx_trader import OKXAPI
-# from broker.binance_trader import BinanceAPI
-# from broker.bybit_trader import BybitAPI
-# from broker.coninbase_trader import CoinbaseAPI
-# from broker.hotcoin_trader import HotcoinAPI
-# from broker.bitget_trader import BitgetAPI
-# from broker.karken_trader import KrakenAPI
+from .broker.trader import ExchangeAPI
+# from .broker.okx_trader import OKXAPI
+# from .broker.binance_trader import BinanceAPI
+# from .broker.bybit_trader import BybitAPI
+# from .broker.coninbase_trader import CoinbaseAPI
+# from .broker.hotcoin_trader import HotcoinAPI
+# from .broker.bitget_trader import BitgetAPI
+# from .broker.karken_trader import KrakenAPI
 
 class ExchangeAPIFactory:
     @staticmethod
@@ -15,26 +15,26 @@ class ExchangeAPIFactory:
         exchange_channel = config.exchangeInfo
         
         if exchange_channel.name.lower() == 'okx':
-            from broker.okx_trader import OKXAPI
-            return OKXAPI(config)
+            from broker import okx_trader as okxTrader
+            return okxTrader.OKXAPI(config)
         elif exchange_channel.name.lower() == 'kraken':
-            from broker.karken_trader import KrakenAPI
-            return KrakenAPI(config)
+            from broker import karken_trader as karkenTrader
+            return karkenTrader.KrakenAPI(config)
         elif exchange_channel.name.lower() == 'hotcoin':
-            from broker.hotcoin_trader import HotcoinAPI
-            return HotcoinAPI(config)
+            from broker import hotcoin_trader as hotcoinTrader
+            return hotcoinTrader.HotcoinAPI(config)
         elif exchange_channel.name.lower() == 'coinbase':
-            from broker.coninbase_trader import CoinbaseAPI
-            return CoinbaseAPI(config)
+            from broker import coninbase_trader as coinbaseTrader
+            return coinbaseTrader.CoinbaseAPI(config)
         elif exchange_channel.name.lower() == 'bybit':
-            from broker.bybit_trader import BybitAPI
-            return BybitAPI(config)
+            from broker import bybit_trader as bybitTrader
+            return bybitTrader.BybitAPI(config)
         elif exchange_channel.name.lower() == 'bitget':
-            from broker.bitget_trader import BitgetAPI
-            return BitgetAPI(config)
+            from broker import bitget_trader as bitgetTrader
+            return bitgetTrader.BitgetAPI(config)
         elif exchange_channel.name.lower() == 'binance':
-            from broker.binance_trader import BinanceAPI
-            return BinanceAPI(config)
+            from broker import binance_trader as binanceTrader
+            return binanceTrader.BinanceAPI(config)
         else:
             raise ValueError(f"Unsupported exchange: {exchange_channel.name}")
 
