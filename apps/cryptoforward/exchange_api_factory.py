@@ -1,5 +1,5 @@
 from .models import ExchangeConfig
-from .broker.trader import ExchangeAPI
+from broker import trader
 # from .broker.okx_trader import OKXAPI
 # from .broker.binance_trader import BinanceAPI
 # from .broker.bybit_trader import BybitAPI
@@ -10,7 +10,7 @@ from .broker.trader import ExchangeAPI
 
 class ExchangeAPIFactory:
     @staticmethod
-    def get_exchange_api(exchange_name: str, config: ExchangeConfig) -> ExchangeAPI:
+    def get_exchange_api(exchange_name: str, config: ExchangeConfig) -> trader.ExchangeAPI:
         # 从 config 中获取与交易所相关的信息
         exchange_channel = config.exchangeInfo
         
