@@ -132,6 +132,14 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': '/var/run/redis/redis.sock',
+    },
+}
+
+
 WSGI_APPLICATION = "config.wsgi.application"
 
 
