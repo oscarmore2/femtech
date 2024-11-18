@@ -5,7 +5,7 @@ from .formatMsg import ParseTradingFormat
 from .models import DepositAccount, ExcangeSignalTrading
 from django_q.tasks import async_task, result
 from django.views.decorators.csrf import csrf_exempt
-from queue import queue
+import queue
 import requests
 from django.core.cache import cache
 from django_redis import get_redis_connection
