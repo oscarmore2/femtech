@@ -88,7 +88,7 @@ class ExcangeSignalTrading(models.Model):
     format_string_enter_short = models.TextField(blank=True, verbose_name="空仓进场交易信号格式(json 格式)")
     format_string_exit_short = models.TextField(blank=True, verbose_name="多仓离场交易信号格式(json 格式)")
     order_list = models.ManyToManyField(ExchangeOrder, blank=True, verbose_name="订单列表")
-    signal_type = models.IntegerField(choices=SignalType, verbose_name="对冲交易类型")
+    signal_type = models.IntegerField(choices=SignalType, default=1, verbose_name="对冲交易类型")
 
     def __str__(self):
         return self.name
