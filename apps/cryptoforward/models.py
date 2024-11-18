@@ -15,7 +15,7 @@ class TradingType(models.IntegerChoices):
         SELL_FUTURE_LOW = 5, _("做多卖出")
         BUY_FUTURE_HIGH = 6, _("做空买入")
 
-class SignalType(model.IntegerChoices):
+class SignalType(models.IntegerChoices):
     DUEL = 1, _("双向")
     BUY_LOW_ONLY= 2, _("只做多")
     SELL_HIGH_ONLY = 3, _("只做空")

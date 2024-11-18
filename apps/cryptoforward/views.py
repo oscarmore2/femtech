@@ -168,7 +168,7 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 
 
 def doAccountLogin():
-    
+    pass
 
 # Create your views here.
 @csrf_exempt
