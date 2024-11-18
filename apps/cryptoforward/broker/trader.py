@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from ..models import ExchangeConfig
 
 class ExchangeAPI():
     def __init__(self, config: ExchangeConfig):
