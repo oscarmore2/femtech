@@ -142,7 +142,7 @@ CACHES = {
                 "max_connections": 1000,
                 "encoding": 'utf-8'
             },
-            # "PASSWORD": "foobared" # redis密码
+            "PASSWORD": "foobared" # redis密码
         }
     }
 }
