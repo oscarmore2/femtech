@@ -44,7 +44,8 @@ class TradingPair (models.Model):
 class ExchangeChannel(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, verbose_name="交易所名称")
-    base_url = models.CharField(max_length=200, verbose_name="交易所接口base url")
+    base_url = models.CharField(max_length=200, verbose_name="交易所rest接口base url")
+    ws_url = models.CharField(max_length=200, verbose_name="交易所websocket接口base url")
 
     def __str__(self):
         return self.name
