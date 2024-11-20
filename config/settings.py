@@ -13,6 +13,7 @@ import os
 import random
 import string
 from pathlib import Path
+import secrets
 
 from dotenv import load_dotenv
 
@@ -32,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # If using the .env file for SECRET_KEY then comment below random SECRET_KEY generation code.
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "SCZaRcSWU7Nz1Dpp2NJ0EVYf1ZoCem4jqIVr3jPocVc"
 if not SECRET_KEY:
     SECRET_KEY = "".join(random.choice(string.ascii_lowercase) for i in range(32))
 
