@@ -9,7 +9,7 @@ from .trader import ExchangeAPI
 
 class OKXAPI(ExchangeAPI):
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.config.base_url}/api/v5/trade/order"
+        url = f"{self.base_url}/api/v5/trade/order"
         order_data = {
             "instId": trading_pair,
             "tdMode": "cross",
@@ -24,13 +24,13 @@ class OKXAPI(ExchangeAPI):
         return response.json()
 
     def close_order(self, order_id: str):
-        url = f"{self.config.base_url}/api/v5/trade/order/{order_id}/close"
+        url = f"{self.base_url}/api/v5/trade/order/{order_id}/close"
         headers = self._get_headers('POST', f'/api/v5/trade/order/{order_id}/close')
         response = requests.post(url, headers=headers)
         return response.json()
 
     def query_order(self, order_id: str):
-        url = f"{self.config.base_url}/api/v5/trade/order/{order_id}"
+        url = f"{self.base_url}/api/v5/trade/order/{order_id}"
         headers = self._get_headers('GET', f'/api/v5/trade/order/{order_id}')
         response = requests.get(url, headers=headers)
         return response.json()

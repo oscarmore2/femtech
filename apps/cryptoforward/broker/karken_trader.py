@@ -8,7 +8,7 @@ from .trader import ExchangeAPI
 
 class KrakenAPI(ExchangeAPI):
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.config.base_url}/0/private/AddOrder"
+        url = f"{self.base_url}/0/private/AddOrder"
         order_data = {
             "pair": trading_pair,
             "type": order_type.lower(),  # "buy" 或 "sell"
@@ -21,7 +21,7 @@ class KrakenAPI(ExchangeAPI):
         return response.json()
 
     def close_order(self, order_id: str):
-        url = f"{self.config.base_url}/0/private/CancelOrder"
+        url = f"{self.base_url}/0/private/CancelOrder"
         order_data = {
             "txid": order_id
         }
@@ -31,7 +31,7 @@ class KrakenAPI(ExchangeAPI):
         return response.json()
 
     def query_order(self, order_id: str):
-        url = f"{self.config.base_url}/0/private/QueryOrders"
+        url = f"{self.base_url}/0/private/QueryOrders"
         order_data = {
             "txid": order_id
         }

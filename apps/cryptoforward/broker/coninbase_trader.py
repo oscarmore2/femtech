@@ -13,7 +13,7 @@ class CoinbaseAPI(ExchangeAPI):
         self.positions = {}  # 用于存储持仓信息
 
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.config.base_url}/orders"
+        url = f"{self.base_url}/orders"
         order_data = {
             "product_id": trading_pair,
             "side": order_type.lower(),  # "buy" 或 "sell"
@@ -40,13 +40,13 @@ class CoinbaseAPI(ExchangeAPI):
 
     def close_order(self, order_id: str):
         # Coinbase Pro 不直接支持通过 ID 平仓，需要使用取消订单来实现
-        url = f"{self.config.base_url}/orders/{order_id}"
+        url = f"{self.base_url}/orders/{order_id}"
         headers = self._get_headers('DELETE', url)
         response = requests.delete(url, headers=headers)
         return response.json()
 
     def query_order(self, order_id: str):
-        url = f"{self.config.base_url}/orders/{order_id}"
+        url = f"{self.base_url}/orders/{order_id}"
         headers = self._get_headers('GET', url)
         response = requests.get(url, headers=headers)
         return response.json()

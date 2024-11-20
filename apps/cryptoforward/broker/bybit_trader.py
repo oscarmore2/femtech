@@ -8,7 +8,7 @@ from .trader import ExchangeAPI
 
 class BybitAPI(ExchangeAPI):
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.config.base_url}/v2/private/order/create"
+        url = f"{self.base_url}/v2/private/order/create"
         order_data = {
             "symbol": trading_pair,
             "side": order_type.lower(),  # "Buy" 或 "Sell"
@@ -26,7 +26,7 @@ class BybitAPI(ExchangeAPI):
         return response.json()
 
     def close_order(self, order_id: str):
-        url = f"{self.config.base_url}/v2/private/order/cancel"
+        url = f"{self.base_url}/v2/private/order/cancel"
         cancel_data = {
             "order_id": order_id,
             "api_key": self.config.api_key,
@@ -38,7 +38,7 @@ class BybitAPI(ExchangeAPI):
         return response.json()
 
     def query_order(self, order_id: str):
-        url = f"{self.config.base_url}/v2/private/order"
+        url = f"{self.base_url}/v2/private/order"
         query_data = {
             "order_id": order_id,
             "api_key": self.config.api_key,

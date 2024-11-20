@@ -8,7 +8,7 @@ from .trader import ExchangeAPI
 
 class BitgetAPI(ExchangeAPI):
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.config.base_url}/api/v1/order"
+        url = f"{self.base_url}/api/v1/order"
         order_data = {
             "symbol": trading_pair,
             "price": 0,  # 市场订单不需要指定价格
@@ -23,13 +23,13 @@ class BitgetAPI(ExchangeAPI):
         return response.json()
 
     def close_order(self, order_id: str):
-        url = f"{self.config.base_url}/api/v1/order/{order_id}/close"
+        url = f"{self.base_url}/api/v1/order/{order_id}/close"
         headers = self._get_headers('POST', url)
         response = requests.post(url, headers=headers)
         return response.json()
 
     def query_order(self, order_id: str):
-        url = f"{self.config.base_url}/api/v1/order/{order_id}"
+        url = f"{self.base_url}/api/v1/order/{order_id}"
         headers = self._get_headers('GET', url)
         response = requests.get(url, headers=headers)
         return response.json()

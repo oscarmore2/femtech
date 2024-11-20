@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from ..models import ExchangeConfig
 
 class ExchangeAPI():
-    def __init__(self, config: ExchangeConfig):
+    def __init__(self, config: ExchangeConfig, baseUrl:str):
         self.config = config
+        self.base_url = baseUrl
 
     @abstractmethod
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):

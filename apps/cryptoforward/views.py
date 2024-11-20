@@ -110,7 +110,8 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
             # 创建 API 实例
             exchange_api = ExchangeAPIFactory.get_exchange_api(
                 exchange_config.exchangeInfo.name,  # 使用 exchangeInfo 获取交易所名称
-                exchange_config  # 直接传递整个配置对象
+                exchange_config,  # 直接传递整个配置对象
+                exchange_config.exchangeInfo.base_url # 传入基础路径
             )
 
             # 检查是否有正在执行的订单

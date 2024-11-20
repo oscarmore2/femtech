@@ -8,7 +8,7 @@ from .trader import ExchangeAPI
 
 class BinanceAPI(ExchangeAPI):
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.config.base_url}/fapi/v1/order"
+        url = f"{self.base_url}/fapi/v1/order"
         order_data = {
             "symbol": trading_pair,
             "side": order_type.upper(),  # "BUY" 或 "SELL"
@@ -23,7 +23,7 @@ class BinanceAPI(ExchangeAPI):
         return response.json()
 
     def close_order(self, order_id: str):
-        url = f"{self.config.base_url}/api/v3/order"
+        url = f"{self.base_url}/api/v3/order"
         timestamp = self._get_timestamp()
         
         params = {
@@ -36,7 +36,7 @@ class BinanceAPI(ExchangeAPI):
         return response.json()
 
     def query_order(self, order_id: str):
-        url = f"{self.config.base_url}/api/v3/order"
+        url = f"{self.base_url}/api/v3/order"
         timestamp = self._get_timestamp()
         
         params = {
