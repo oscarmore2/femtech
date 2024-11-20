@@ -122,7 +122,6 @@ class DepositAccount(AbstractBaseUser):
     nickname = models.CharField(max_length=100, blank=True, verbose_name="昵称")
     is_active = models.BooleanField(default=True, verbose_name="是否启用")
     trade_pair = models.ManyToManyField(TradingPair, blank=True, null=True, related_name='account_trading_pair', verbose_name="关联交易对")
-    related_account = models.ForeignKey(ExchangeAccountInfo, on_delete=models.CASCADE, related_name='account_trading_pair', verbose_name="关联账户")
     order_list = models.ManyToManyField(ExchangeOrder, blank=True, verbose_name="订单列表")
 
     objects = AccountManager()
