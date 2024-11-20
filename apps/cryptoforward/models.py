@@ -127,7 +127,7 @@ class DepositAccount(AbstractBaseUser):
 
     objects = AccountManager()
 
-    USERNAME_FIELD = 'account_name'
+    USERNAME_FIELD = 'username'
 
     def save(self, *args, **kwargs):
         if self._state.adding:
