@@ -2,7 +2,7 @@ from django.shortcuts import render
 import json
 from django.http import HttpResponse, HttpResponseRedirect
 from .formatMsg import ParseTradingFormat
-from .models import DepositAccount, ExcangeSignalTrading, ExchangeConfig
+from .models import DepositAccount, ExcangeSignalTrading, ExchangeConfig, ExchangeOrder
 from django_q.tasks import async_task, result
 from django.views.decorators.csrf import csrf_exempt
 import queue
