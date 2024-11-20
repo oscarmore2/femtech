@@ -15,25 +15,25 @@ class ExchangeAPIFactory:
         exchange_channel = config.exchangeInfo
         
         if exchange_channel.name.lower() == 'okx':
-            from broker import okx_trader as okxTrader
+            from .broker import okx_trader as okxTrader
             return okxTrader.OKXAPI(config)
         elif exchange_channel.name.lower() == 'kraken':
-            from broker import karken_trader as karkenTrader
+            from .broker import karken_trader as karkenTrader
             return karkenTrader.KrakenAPI(config)
         elif exchange_channel.name.lower() == 'hotcoin':
-            from broker import hotcoin_trader as hotcoinTrader
+            from .broker import hotcoin_trader as hotcoinTrader
             return hotcoinTrader.HotcoinAPI(config)
         elif exchange_channel.name.lower() == 'coinbase':
-            from broker import coninbase_trader as coinbaseTrader
+            from .broker import coninbase_trader as coinbaseTrader
             return coinbaseTrader.CoinbaseAPI(config)
         elif exchange_channel.name.lower() == 'bybit':
-            from broker import bybit_trader as bybitTrader
+            from .broker import bybit_trader as bybitTrader
             return bybitTrader.BybitAPI(config)
         elif exchange_channel.name.lower() == 'bitget':
-            from broker import bitget_trader as bitgetTrader
+            from .broker import bitget_trader as bitgetTrader
             return bitgetTrader.BitgetAPI(config)
         elif exchange_channel.name.lower() == 'binance':
-            from broker import binance_trader as binanceTrader
+            from .broker import binance_trader as binanceTrader
             return binanceTrader.BinanceAPI(config)
         else:
             raise ValueError(f"Unsupported exchange: {exchange_channel.name}")
