@@ -7,7 +7,7 @@ import json
 from .trader import ExchangeAPI
 
 class KrakenAPI(ExchangeAPI):
-    def place_order(self, trading_pair: str, amount: float, order_type: str):
+    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
         url = f"{self.config.base_url}/0/private/AddOrder"
         order_data = {
             "pair": trading_pair,

@@ -12,7 +12,7 @@ class CoinbaseAPI(ExchangeAPI):
         self.config = config
         self.positions = {}  # 用于存储持仓信息
 
-    def place_order(self, trading_pair: str, amount: float, order_type: str):
+    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
         url = f"{self.config.base_url}/orders"
         order_data = {
             "product_id": trading_pair,

@@ -7,7 +7,7 @@ import requests
 import json
 
 class HotcoinAPI(ExchangeAPI):
-    def place_order(self, trading_pair: str, amount: float, order_type: str):
+    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
         url = f"{self.config.base_url}/api/v1/order"
         order_data = {
             "symbol": trading_pair,

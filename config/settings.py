@@ -101,6 +101,8 @@ Q_CLUSTER = {
     'queue_limit': 500,
     'cpu_affinity': 1,
     'label': 'Django Q',
+    'orm': 'default',  # 确保使用正确的 ORM
+    'broker': 'django://',
     'redis': {
         'host': '127.0.0.1',
         'port': 6379,

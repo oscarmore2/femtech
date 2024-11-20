@@ -6,7 +6,7 @@ class ExchangeAPI():
         self.config = config
 
     @abstractmethod
-    def place_order(self, trading_pair: str, amount: float, order_type: str):
+    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
         pass
 
     @abstractmethod

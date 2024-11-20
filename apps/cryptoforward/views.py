@@ -149,8 +149,8 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 response = exchange_api.place_order(
                     trading_pair=fingerPrint,
                     amount=context["amount"],
-                    order_type=context["direction"].lower(),  # 确保为小写
-                    pos_side=context.get("pos_side", "LONG")  # 默认使用 LONG 或根据需要修改
+                    order_type="buy",  # 确保为小写
+                    pos_side=context["direction"]  # 默认使用 LONG 或根据需要修改
                 )
                 if response.get('code') == 200:  # 假设响应中有 code 字段
                     # 更新订单记录
