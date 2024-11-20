@@ -138,6 +138,7 @@ class DepositAccount(AbstractBaseUser):
 
 class ExchangeConfig(models.Model):
     id = models.AutoField(primary_key=True)
+    name =  models.CharField(max_length=200, verbose_name="交易配置名称")
     exchangeInfo = models.ForeignKey(ExchangeChannel, on_delete=models.CASCADE, related_name='exchange_config_pair', verbose_name="所属交易所")
     account = models.ForeignKey(DepositAccount, on_delete=models.CASCADE, related_name='account_config_pair', verbose_name="所属账号")
     api_key = models.TextField(max_length=255, blank=True, null=True, verbose_name="API密钥")  # API密钥
