@@ -4,6 +4,7 @@ import hashlib
 import base64
 import json
 import requests
+import datetime
 
 from .trader import ExchangeAPI
 
