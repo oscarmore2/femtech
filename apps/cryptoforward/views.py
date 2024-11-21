@@ -120,6 +120,8 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 order_state=ExchangeOrder.State.FINISH
             )
 
+            pair = TradingPair.objects.get(finger_print=fingerPrint)
+
             if ongoing_orders.exists():
                 for order in ongoing_orders:
                     # 判断订单方向与 context["direction"] 是否一致
@@ -142,7 +144,7 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 # 没有找到订单，进行下单操作
                 data = {
                     "amount": context["amount"],
-                    "ticker": context["ticker"],
+                    "ticker": pair.treading_pair_currency,
                     "direction": context["direction"],
                     # 添加其他必要的参数，确保方向与 context 一致
                 }
