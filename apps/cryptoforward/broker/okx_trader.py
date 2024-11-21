@@ -20,6 +20,8 @@ class OKXAPI(ExchangeAPI):
             "posSide": pos_side,  # 这里添加 posSide
         }
 
+        print("print all order data", order_data)
+
         headers = self._get_headers('POST', url, order_data)
         response = requests.post(url, headers=headers, json=order_data)
         return response.json()
@@ -72,9 +74,9 @@ class OKXAPI(ExchangeAPI):
         message = f"{timestamp}{method}{request_path}{body_str}"
         
         hmac_key = self.config.api_secret.encode('utf-8')
-        signature = hmac.new(hmac_key, message.encode('utf-8'), hashlib.sha256)
+        signature = hmac.new(bytes(self.config.api_secret, encoding='utf8'), bytes(message, encoding='utf-8'), digestmod='sha256')
         
-        return base64.b64encode(signature.digest()).decode('utf-8')
+        return base64.b64encode(signature.digest())
 
     def _get_timestamp(self):
         now = datetime.datetime.utcnow()
