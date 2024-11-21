@@ -75,7 +75,7 @@ class OKXAPI(ExchangeAPI):
         
         return base64.b64encode(signature.digest()).decode('utf-8')
 
-    def _get_timestamp():
+    def _get_timestamp(self):
         now = datetime.datetime.utcnow()
         t = now.isoformat("T", "milliseconds")
         return t + "Z"
