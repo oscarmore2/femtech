@@ -60,8 +60,10 @@ class OKXAPI(ExchangeAPI):
             'OK-ACCESS-SIGN': signature,
             'OK-ACCESS-TIMESTAMP': timestamp,
             'OK-ACCESS-PASSPHRASE': self.config.api_passphrase,
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         }
+        if self.config.isMock:
+            headers['x-simulated-trading'] = "1"
         return headers
 
     def _generate_signature(self, timestamp: str, method: str, request_path: str, body=None) -> str:
@@ -73,5 +75,7 @@ class OKXAPI(ExchangeAPI):
         
         return base64.b64encode(signature.digest()).decode('utf-8')
 
-    def _get_timestamp(self) -> str:
-        return time.strftime('%Y-%m-%dT%H:%M:%S.%fZ', time.gmtime())
+    def get_timestamp():
+        now = datetime.datetime.utcnow()
+        t = now.isoformat("T", "milliseconds")
+        return t + "Z"
