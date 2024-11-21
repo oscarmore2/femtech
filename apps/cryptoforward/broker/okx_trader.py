@@ -10,7 +10,8 @@ from .trader import ExchangeAPI
 
 class OKXAPI(ExchangeAPI):
     def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
-        url = f"{self.base_url}/api/v5/trade/order"
+        path = '/api/v5/trade/order'
+        url = f"{self.base_url}{path}"
         order_data = {
             "instId": trading_pair,
             "tdMode": "cross",
@@ -22,13 +23,14 @@ class OKXAPI(ExchangeAPI):
 
         print("print all order data", order_data)
 
-        headers = self._get_headers('POST', url, order_data)
+        headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
         return response.json()
 
     def close_order(self, order_id: str):
+        path = f'/api/v5/trade/order/{order_id}/close'
         url = f"{self.base_url}/api/v5/trade/order/{order_id}/close"
-        headers = self._get_headers('POST', f'/api/v5/trade/order/{order_id}/close')
+        headers = self._get_headers('POST', path)
         response = requests.post(url, headers=headers)
         return response.json()
 
@@ -71,9 +73,11 @@ class OKXAPI(ExchangeAPI):
 
     def _generate_signature(self, timestamp: str, method: str, request_path: str, body=None) -> str:
         body_str = json.dumps(body) if body else ''
-        message = f"{timestamp}{method}{request_path}{body_str}"
         
-        hmac_key = self.config.api_secret.encode('utf-8')
+        message = f"{timestamp}{str.upper(method)}{request_path}{body_str}"
+        print("get message is ", message)
+
+        # hmac_key = self.config.api_secret.encode('utf-8')
         signature = hmac.new(bytes(self.config.api_secret, encoding='utf8'), bytes(message, encoding='utf-8'), digestmod='sha256')
         
         return base64.b64encode(signature.digest())
