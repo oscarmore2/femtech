@@ -148,7 +148,7 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 }
                 # 调用下单方法
                 response = exchange_api.place_order(
-                    trading_pair=fingerPrint,
+                    trading_pair=context["ticker"],
                     amount=context["amount"],
                     order_type="buy",  # 确保为小写
                     pos_side=context["direction"]  # 默认使用 LONG 或根据需要修改
