@@ -144,13 +144,13 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 # 没有找到订单，进行下单操作
                 data = {
                     "amount": context["amount"],
-                    "ticker": pair.treading_pair_currency,
+                    "ticker": context["ticker"],
                     "direction": context["direction"],
                     # 添加其他必要的参数，确保方向与 context 一致
                 }
                 # 调用下单方法
                 response = exchange_api.place_order(
-                    trading_pair=context["ticker"],
+                    trading_pair= pair.treading_pair_currency,
                     amount=context["amount"],
                     order_type="buy",  # 确保为小写
                     pos_side=context["direction"]  # 默认使用 LONG 或根据需要修改
