@@ -15,10 +15,10 @@ class BitgetAPI(ExchangeAPI):
         productType = ""
         if self.config.isMock:
             symbol = "S{0}S{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
-            productType = "S{0}-FUTURE".format(str.lower(trading_pair.source_currency))
+            productType = "S{0}-FUTURE".format(str.upper(trading_pair.source_currency))
         else:
             symbol = "{0}{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
-            productType = "{0}-FUTURE".format(str.lower(trading_pair.source_currency))
+            productType = "{0}-FUTURE".format(str.upper(trading_pair.source_currency))
         trade_side = "open" if pos_side == "long" else "close"
         order_data = {
             "symbol": symbol,
@@ -67,10 +67,10 @@ class BitgetAPI(ExchangeAPI):
         
         headers = {
             'Content-Type': 'application/json',
-            'Access-Key': self.config.api_key,
-            'Access-Sign': signature,
-            'Access-Timestamp': timestamp,
-            'Access-Passphrase': self.config.api_passphrase,
+            'ACCESS-KEY': self.config.api_key,
+            'ACCESS-SIGN': signature,
+            'ACCESS-TIMESTAMP': timestamp,
+            'ACCESS-PASSPHRASE': self.config.api_passphrase,
             'locale': 'zh-CN',
         }
         print("-----> bitget get header with ", headers)
