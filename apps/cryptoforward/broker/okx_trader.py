@@ -18,11 +18,11 @@ class OKXAPI(ExchangeAPI):
             "tdMode": "cross",
             "side": order_type.lower(),  # "buy" 或 "sell"
             "ordType": "market",
-            "sz": amount,
-            "posSide": pos_side,  # 这里添加 posSide
+            "sz": str(amount),
+            "posSide": pos_side.lower(),  # 这里添加 posSide
         }
 
-        print("print all order data", order_data)
+        print(" ----------> OKX print all order data", order_data)
 
         headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
@@ -76,7 +76,7 @@ class OKXAPI(ExchangeAPI):
         body_str = json.dumps(body) if body else ''
         
         message = f"{timestamp}{str.upper(method)}{request_path}{body_str}"
-        print("get message is ", message)
+        print(" ----------> Okx get message is ", message)
 
         # hmac_key = self.config.api_secret.encode('utf-8')
         signature = hmac.new(bytes(self.config.api_secret, encoding='utf8'), bytes(message, encoding='utf-8'), digestmod='sha256')
