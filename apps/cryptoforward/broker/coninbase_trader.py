@@ -6,13 +6,14 @@ import requests
 import json
 
 from .trader import ExchangeAPI
+from ..models import TradingPair
 
 class CoinbaseAPI(ExchangeAPI):
     def __init__(self, config):
         self.config = config
         self.positions = {}  # 用于存储持仓信息
 
-    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
         url = f"{self.base_url}/orders"
         order_data = {
             "product_id": trading_pair,

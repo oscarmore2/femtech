@@ -28,7 +28,7 @@ class TradingPair (models.Model):
         return m1.hexdigest()
         
     finger_print = models.TextField(primary_key=True, blank=True, editable=False, verbose_name="指纹值")
-    treading_pair_currency = models.CharField(max_length=200, verbose_name="交易对币种")
+    treading_pair_currency = models.CharField(max_length=200, verbose_name="交易对名称")
     target_currency = models.CharField(max_length=200, default="BTC", verbose_name="交易币种")
     source_currency = models.CharField(max_length=200, default="USDT", verbose_name="基准币种")
     trading_context = models.TextField(blank=True, verbose_name="交易信息Context(json 格式)")

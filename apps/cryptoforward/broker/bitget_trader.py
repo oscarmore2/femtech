@@ -5,12 +5,22 @@ import requests
 import json
 
 from .trader import ExchangeAPI
+from ..models import TradingPair
 
 class BitgetAPI(ExchangeAPI):
-    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
         url = f"{self.base_url}/api/v1/order"
+        symbol = ""
+        productType = ""
+        if config.isMock:
+            symbol = "S{0}S{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
+            productType = "s{0}".format(str.lower(trading_pair.source_currency))
+        else:
+            symbol = "{0}{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
+            productType = "{0}".format(str.lower(trading_pair.source_currency))
         order_data = {
-            "symbol": trading_pair,
+            "symbol": symbol,
+            "productType": productType,
             "price": 0,  # 市场订单不需要指定价格
             "size": amount,
             "side": order_type.lower(),  # "buy" 或 "sell"

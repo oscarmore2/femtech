@@ -7,13 +7,14 @@ import requests
 import datetime
 
 from .trader import ExchangeAPI
+from ..models import TradingPair
 
 class OKXAPI(ExchangeAPI):
-    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
         path = '/api/v5/trade/order'
         url = f"{self.base_url}{path}"
         order_data = {
-            "instId": trading_pair,
+            "instId": "{0}-{1}".format(trading_pair.target_currency, trading_pair.source_currency),
             "tdMode": "cross",
             "side": order_type.lower(),  # "buy" 或 "sell"
             "ordType": "market",

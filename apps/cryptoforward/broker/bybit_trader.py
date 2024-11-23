@@ -5,9 +5,10 @@ import requests
 import json
 
 from .trader import ExchangeAPI
+from ..models import TradingPair
 
 class BybitAPI(ExchangeAPI):
-    def place_order(self, trading_pair: str, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
         url = f"{self.base_url}/v2/private/order/create"
         order_data = {
             "symbol": trading_pair,
