@@ -110,69 +110,71 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
             if exchange_config.isActive == False:
                 print("{0}未启用，跳过", exchange_config.name)
                 continue
+            
+            async_task(execute_trading_single_account, fingerPrint=data["fingerPrint"], exchange_config=exchange_config, context=context)
 
-            # 创建 API 实例
-            exchange_api = ExchangeAPIFactory.get_exchange_api(
-                exchange_config.exchangeInfo.name,  # 使用 exchangeInfo 获取交易所名称
-                exchange_config,  # 直接传递整个配置对象
-                exchange_config.exchangeInfo.base_url # 传入基础路径
-            )
+def execute_trading_single_account(fingerPrint: str, exchange_config: object, context: object):
+    # 创建 API 实例
+    exchange_api = ExchangeAPIFactory.get_exchange_api(
+        exchange_config.exchangeInfo.name,  # 使用 exchangeInfo 获取交易所名称
+        exchange_config,  # 直接传递整个配置对象
+        exchange_config.exchangeInfo.base_url # 传入基础路径
+    )
 
-            # 检查是否有正在执行的订单
-            ongoing_orders = ExchangeOrder.objects.filter(
-                trading_pair__finger_print=fingerPrint,
-                order_state=ExchangeOrder.State.FINISH
-            )
+    # 检查是否有正在执行的订单
+    ongoing_orders = ExchangeOrder.objects.filter(
+        trading_pair__finger_print=fingerPrint,
+        order_state=ExchangeOrder.State.FINISH
+    )
 
-            pair = TradingPair.objects.get(finger_print=fingerPrint)
+    pair = TradingPair.objects.get(finger_print=fingerPrint)
 
-            if ongoing_orders.exists():
-                for order in ongoing_orders:
-                    # 判断订单方向与 context["direction"] 是否一致
-                    current_direction = order.trading_type  # 假设 trading_type 存储了订单方向
-                    if current_direction != context["direction"]:
-                        # 反转持仓方向
-                        response = exchange_api.reverse_order(order.exchange_orderId)
-                        if response.get('code') == 200:  # 假设响应中有 code 字段
-                            # 更新订单记录
-                            order.order_state = ExchangeOrder.State.REVERSED  # 假设有一个 REVERSED 状态
-                            order.trading_type = context["direction"]  # 更新方向为新的方向
-                            order.save()
-                            print(f"Order {order.exchange_orderId} reversed successfully.")
-                        else:
-                            print(f"Failed to reverse order {order.exchange_orderId}: {response}")
-                    else:
-                        print(f"Current order direction matches context direction: {current_direction}")
-
-            else:
-                # 没有找到订单，进行下单操作
-                data = {
-                    "amount": context["amount"],
-                    "ticker": context["ticker"],
-                    "direction": context["direction"],
-                    # 添加其他必要的参数，确保方向与 context 一致
-                }
-                # 调用下单方法
-                response = exchange_api.place_order(
-                    trading_pair= pair,
-                    amount=context["amount"],
-                    order_type="buy",  # 确保为小写
-                    pos_side=context["direction"]  # 默认使用 LONG 或根据需要修改
-                )
+    if ongoing_orders.exists():
+        for order in ongoing_orders:
+            # 判断订单方向与 context["direction"] 是否一致
+            current_direction = order.trading_type  # 假设 trading_type 存储了订单方向
+            if current_direction != context["direction"]:
+                # 反转持仓方向
+                response = exchange_api.reverse_order(order.exchange_orderId)
                 if response.get('code') == 200:  # 假设响应中有 code 字段
                     # 更新订单记录
-                    order_info = response  # 假设响应中包含订单信息
-                    ExchangeOrder.objects.create(
-                        exchange_orderId=order_info.get('id'),
-                        trading_pair=fingerPrint,
-                        order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
-                        trading_type=context["direction"],  # 设置为当前方向
-                        amount=context["amount"]
-                    )
-                    print("Order placed successfully:", order_info)
+                    order.order_state = ExchangeOrder.State.REVERSED  # 假设有一个 REVERSED 状态
+                    order.trading_type = context["direction"]  # 更新方向为新的方向
+                    order.save()
+                    print(f"Order {order.exchange_orderId} reversed successfully.")
                 else:
-                    print("Order placement failed:", response)
-                
+                    print(f"Failed to reverse order {order.exchange_orderId}: {response}")
+            else:
+                print(f"Current order direction matches context direction: {current_direction}")
+
+    else:
+        # 没有找到订单，进行下单操作
+        data = {
+            "amount": context["amount"],
+            "ticker": context["ticker"],
+            "direction": context["direction"],
+            # 添加其他必要的参数，确保方向与 context 一致
+        }
+        # 调用下单方法
+        response = exchange_api.place_order(
+            trading_pair= pair,
+            amount=context["amount"],
+            order_type="buy",  # 确保为小写
+            pos_side=context["direction"]  # 默认使用 LONG 或根据需要修改
+        )
+        if response.get('code') == 200:  # 假设响应中有 code 字段
+            # 更新订单记录
+            order_info = response  # 假设响应中包含订单信息
+            ExchangeOrder.objects.create(
+                exchange_orderId=order_info.get('id'),
+                trading_pair=fingerPrint,
+                order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
+                trading_type=context["direction"],  # 设置为当前方向
+                amount=context["amount"]
+            )
+            print("Order placed successfully:", order_info)
+        else:
+            print("Order placement failed:", response)
 
 def doAccountLogin():
     pass
