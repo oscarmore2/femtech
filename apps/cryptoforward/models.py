@@ -41,7 +41,7 @@ class TradingPair (models.Model):
         super().save(**kwargs)
 
     def __str__(self):
-        return "{0}-{1}-{2}".format(self.treading_pair_currency, self.finger_print)
+        return "{0}-{1}-{2}".format(self.target_currency, self.source_currency, self.finger_print)
 
 class ExchangeChannel(models.Model):
     id = models.AutoField(primary_key=True)
