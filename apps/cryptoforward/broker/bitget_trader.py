@@ -9,26 +9,29 @@ from ..models import TradingPair
 
 class BitgetAPI(ExchangeAPI):
     def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
-        url = f"{self.base_url}/api/v1/order"
+        path = "/api/v2/mix/order/place-order"
+        url = f"{self.base_url}{path}"
         symbol = ""
         productType = ""
         if self.config.isMock:
             symbol = "S{0}S{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
-            productType = "s{0}".format(str.lower(trading_pair.source_currency))
+            productType = "S{0}-FUTURE".format(str.lower(trading_pair.source_currency))
         else:
             symbol = "{0}{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
-            productType = "{0}".format(str.lower(trading_pair.source_currency))
+            productType = "{0}-FUTURE".format(str.lower(trading_pair.source_currency))
+        trade_side = "open" if pos_side == "long" else "close"
         order_data = {
             "symbol": symbol,
             "productType": productType,
-            "price": 0,  # 市场订单不需要指定价格
-            "size": amount,
+            "marginMode" : "crossed",
+            "price": "0",  # 市场订单不需要指定价格
+            "size": str(amount),
             "side": order_type.lower(),  # "buy" 或 "sell"
             "type": "market",
-            "posSide": pos_side  # 添加 posSide
+            "tradeSide": trade_side  # 添加 posSide
         }
 
-        headers = self._get_headers('POST', url, order_data)
+        headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
         return response.json()
 
@@ -68,12 +71,16 @@ class BitgetAPI(ExchangeAPI):
             'Access-Sign': signature,
             'Access-Timestamp': timestamp,
             'Access-Passphrase': self.config.api_passphrase,
+            'locale': 'zh-CN',
         }
+        print("-----> bitget get header with ", headers)
         return headers
 
     def _generate_signature(self, timestamp: str, method: str, request_path: str, body=None) -> str:
         body_str = json.dumps(body) if body else ''
         message = f"{timestamp}{method}{request_path}{body_str}"
+
+        print("-----> bitget sign with data ", message)
         
         hmac_key = self.config.api_secret.encode('utf-8')
         signature = hmac.new(hmac_key, message.encode('utf-8'), hashlib.sha256)

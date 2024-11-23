@@ -155,12 +155,14 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             "direction": context["direction"],
             # 添加其他必要的参数，确保方向与 context 一致
         }
+        ord_Type = "buy" if context["direction"] == "long" else "short"
+
         # 调用下单方法
         response = exchange_api.place_order(
             trading_pair= pair,
             amount=context["amount"],
-            order_type="buy",  # 确保为小写
-            pos_side=context["direction"]  # 默认使用 LONG 或根据需要修改
+            order_type= ord_Type,  # 确保为小写
+            pos_side= context["direction"]  # 默认使用 LONG 或根据需要修改
         )
         if response.get('code') == 200:  # 假设响应中有 code 字段
             # 更新订单记录
