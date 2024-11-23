@@ -27,7 +27,7 @@ class BitgetAPI(ExchangeAPI):
             "price": "0",  # 市场订单不需要指定价格
             "size": str(amount),
             "side": order_type.lower(),  # "buy" 或 "sell"
-            "type": "market",
+            "orderType": "market",
             "tradeSide": "open"  # 添加 posSide
         }
 
