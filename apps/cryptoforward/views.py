@@ -107,6 +107,10 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
         exchange_configs = ExchangeConfig.objects.filter(account=account)
 
         for exchange_config in exchange_configs:
+            if exchange_config.isActive == False:
+                print("{0}未启用，跳过", exchange_config.name)
+                continue
+
             # 创建 API 实例
             exchange_api = ExchangeAPIFactory.get_exchange_api(
                 exchange_config.exchangeInfo.name,  # 使用 exchangeInfo 获取交易所名称

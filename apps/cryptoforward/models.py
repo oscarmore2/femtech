@@ -147,6 +147,7 @@ class ExchangeConfig(models.Model):
     api_secret = models.TextField(max_length=255, blank=True, null=True, verbose_name="API密钥的secret")  # API密钥的secret
     api_passphrase = models.TextField(max_length=255, blank=True, null=True, verbose_name="可选的passphrase")  # 可选的passphrase
     isMock = models.BooleanField(default=True, verbose_name="是否模拟交易")
+    isActive = models.BooleanField(default=True, verbose_name="是否是否启用")
 
     def __str__(self):
         return self.name
