@@ -155,7 +155,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             "direction": context["direction"],
             # 添加其他必要的参数，确保方向与 context 一致
         }
-        ord_Type = "buy" if context["direction"] == "long" else "short"
+        ord_Type = "buy" if context["direction"] == "long" else "sell"
 
         # 调用下单方法
         response = exchange_api.place_order(
