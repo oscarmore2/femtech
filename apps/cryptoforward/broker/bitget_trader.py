@@ -19,7 +19,7 @@ class BitgetAPI(ExchangeAPI):
         else:
             symbol = "{0}{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
             productType = "{0}-FUTURE".format(str.upper(trading_pair.source_currency))
-        trade_side = "open" if pos_side == "long" else "close"
+        # trade_side = "open" if pos_side == "long" else "close"
         order_data = {
             "symbol": symbol,
             "productType": productType,
@@ -28,7 +28,7 @@ class BitgetAPI(ExchangeAPI):
             "size": str(amount),
             "side": order_type.lower(),  # "buy" 或 "sell"
             "type": "market",
-            "tradeSide": trade_side  # 添加 posSide
+            "tradeSide": "open"  # 添加 posSide
         }
 
         headers = self._get_headers('POST', path, order_data)
