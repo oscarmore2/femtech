@@ -107,7 +107,7 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
         exchange_configs = ExchangeConfig.objects.filter(account=account)
 
         for exchange_config in exchange_configs:
-            if exchange_config.isActive == False:
+            if not exchange_config.isActive:
                 print("{0}未启用，跳过", exchange_config.name)
                 continue
             
