@@ -3,6 +3,7 @@ import hmac
 import hashlib
 import requests
 import json
+import base64
 
 from .trader import ExchangeAPI
 from ..models import TradingPair
@@ -82,10 +83,10 @@ class BitgetAPI(ExchangeAPI):
 
         print("-----> bitget sign with data ", message)
         
-        hmac_key = self.config.api_secret.encode('utf-8')
+        hmac_key = self.config.api_secret.encode('utf8')
         signature = hmac.new(hmac_key, message.encode('utf-8'), hashlib.sha256)
         
-        return signature.hexdigest()
+        return str(base64.b64encode(signature.digest()), 'utf8')
 
     def _get_timestamp(self) -> str:
         return str(int(time.time() * 1000))  # 返回当前时间戳（毫秒）
