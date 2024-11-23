@@ -150,4 +150,4 @@ class ExchangeConfig(models.Model):
     isActive = models.BooleanField(default=True, verbose_name="是否是否启用")
 
     def __str__(self):
-        return self.name
+        return self.name if self.isActive else "{0}(未启用)".format(self.name)
