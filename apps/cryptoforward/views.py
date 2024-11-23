@@ -111,7 +111,7 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
                 print("{0}未启用，跳过".format(exchange_config.name))
                 continue
             
-            async_task(execute_trading_single_account, fingerPrint=data["fingerPrint"], exchange_config=exchange_config, context=context)
+            async_task(execute_trading_single_account, fingerPrint=context["fingerPrint"], exchange_config=exchange_config, context=context)
 
 def execute_trading_single_account(fingerPrint: str, exchange_config: object, context: object):
     # 创建 API 实例
