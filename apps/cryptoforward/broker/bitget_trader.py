@@ -14,12 +14,15 @@ class BitgetAPI(ExchangeAPI):
         url = f"{self.base_url}{path}"
         symbol = ""
         productType = ""
+        marginCoin = ""
         if self.config.isMock:
             symbol = "S{0}S{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
             productType = "S{0}-FUTURE".format(str.upper(trading_pair.source_currency))
+            marginCoin = "S{0}".format(str.upper(trading_pair.source_currency))
         else:
             symbol = "{0}{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
             productType = "{0}-FUTURE".format(str.upper(trading_pair.source_currency))
+            marginCoin = "{0}".format(str.upper(trading_pair.source_currency))
         # trade_side = "open" if pos_side == "long" else "close"
         order_data = {
             "symbol": symbol,
@@ -27,6 +30,7 @@ class BitgetAPI(ExchangeAPI):
             "marginMode" : "crossed",
             "price": "0",  # 市场订单不需要指定价格
             "size": str(amount),
+            "marginCoin": marginCoin,
             "side": order_type.lower(),  # "buy" 或 "sell"
             "orderType": "market",
             "tradeSide": "open"  # 添加 posSide
