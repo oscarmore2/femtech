@@ -12,7 +12,7 @@ class BitgetAPI(ExchangeAPI):
         url = f"{self.base_url}/api/v1/order"
         symbol = ""
         productType = ""
-        if config.isMock:
+        if self.config.isMock:
             symbol = "S{0}S{1}".format(str.upper(trading_pair.target_currency), str.upper(trading_pair.source_currency))
             productType = "s{0}".format(str.lower(trading_pair.source_currency))
         else:
