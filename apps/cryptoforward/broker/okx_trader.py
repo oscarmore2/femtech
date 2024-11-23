@@ -14,10 +14,10 @@ class OKXAPI(ExchangeAPI):
         path = '/api/v5/trade/order'
         url = f"{self.base_url}{path}"
         order_data = {
-            "instId": "{0}-{1}".format(trading_pair.target_currency, trading_pair.source_currency),
+            "instId": "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency),
             "tdMode": "cross",
             "side": order_type.lower(),  # "buy" 或 "sell"
-            "ordType": "market",
+            "ordType": "optimal_limit_ioc",
             "sz": str(amount),
             "posSide": pos_side.lower(),  # 这里添加 posSide
         }
