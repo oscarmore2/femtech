@@ -8,7 +8,7 @@ from .trader import ExchangeAPI
 from ..models import TradingPair
 
 class BinanceAPI(ExchangeAPI):
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         url = f"{self.base_url}/fapi/v1/order"
         order_data = {
             "symbol": trading_pair,
@@ -36,7 +36,7 @@ class BinanceAPI(ExchangeAPI):
         response = requests.delete(url, params=params)
         return response.json()
 
-    def query_order(self, order_id: str):
+    def query_order(self, order_id: str, trading_pair: TradingPair):
         url = f"{self.base_url}/api/v3/order"
         timestamp = self._get_timestamp()
         
@@ -49,7 +49,7 @@ class BinanceAPI(ExchangeAPI):
         response = requests.get(url, params=params)
         return response.json()
 
-    def reverse_order(self, order_id: str):
+    def reverse_order(self, order:ExchangeOrder):
         current_order = self.query_order(order_id)
         
         if 'status' in current_order and current_order['status'] == 'FILLED':

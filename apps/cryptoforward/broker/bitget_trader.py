@@ -38,7 +38,10 @@ class BitgetAPI(ExchangeAPI):
 
         headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
-        return response.json()
+        if res["code"] == "0":
+            return {"success":True, "msg":"success"}
+        else:
+            return {"success":False, "msg":res}
 
     def close_order(self, order_id: str):
         url = f"{self.base_url}/api/v1/order/{order_id}/close"
@@ -46,13 +49,13 @@ class BitgetAPI(ExchangeAPI):
         response = requests.post(url, headers=headers)
         return response.json()
 
-    def query_order(self, order_id: str):
+    def query_order(self, order_id: str, trading_pair: TradingPair):
         url = f"{self.base_url}/api/v1/order/{order_id}"
         headers = self._get_headers('GET', url)
         response = requests.get(url, headers=headers)
         return response.json()
 
-    def reverse_order(self, order_id: str):
+    def reverse_order(self, order:ExchangeOrder):
         current_order = self.query_order(order_id)
         
         if 'data' in current_order and current_order['data']:

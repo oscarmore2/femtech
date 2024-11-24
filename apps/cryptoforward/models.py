@@ -55,6 +55,7 @@ class ExchangeChannel(models.Model):
 
 class ExchangeOrder(models.Model):
     class State(models.IntegerChoices):
+        OPEN = 1, _("打开")
         FINISH = 2, _("完成")
         FAILD = 3, _("失败")
     
@@ -65,7 +66,7 @@ class ExchangeOrder(models.Model):
     amount = models.FloatField(default=0.0, verbose_name="交易数量")
     leverge = models.FloatField(default=1.0, verbose_name="交易杠杆")
     order_state = models.IntegerField(choices=State, verbose_name="订单状态")
-    trading_type = models.IntegerField(choices=TradingType, verbose_name="交易类型")
+    trading_type = models.IntegerField(choices=TradingType, default=1, verbose_name="交易类型")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="交易创建时间")
     
     def __str__(self):

@@ -13,7 +13,7 @@ class CoinbaseAPI(ExchangeAPI):
         self.config = config
         self.positions = {}  # 用于存储持仓信息
 
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         url = f"{self.base_url}/orders"
         order_data = {
             "product_id": trading_pair,
@@ -46,13 +46,13 @@ class CoinbaseAPI(ExchangeAPI):
         response = requests.delete(url, headers=headers)
         return response.json()
 
-    def query_order(self, order_id: str):
+    def query_order(self, order_id: str, trading_pair: TradingPair):
         url = f"{self.base_url}/orders/{order_id}"
         headers = self._get_headers('GET', url)
         response = requests.get(url, headers=headers)
         return response.json()
 
-    def reverse_order(self, order_id: str):
+    def reverse_order(self, order:ExchangeOrder):
         current_order = self.query_order(order_id)
         
         if 'id' in current_order:

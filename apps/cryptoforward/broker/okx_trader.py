@@ -7,55 +7,70 @@ import requests
 import datetime
 
 from .trader import ExchangeAPI
-from ..models import TradingPair
+from ..models import TradingPair, ExchangeOrder
 
 class OKXAPI(ExchangeAPI):
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         path = '/api/v5/trade/order'
         url = f"{self.base_url}{path}"
+        posSide = "long" if order_type == "buy" else "short"
         order_data = {
             "instId": "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency),
             "tdMode": "cross",
             "side": order_type.lower(),  # "buy" 或 "sell"
-            "ordType": "optimal_limit_ioc",
+            "ordType": "market",
             "sz": str(amount),
-            "posSide": pos_side.lower(),  # 这里添加 posSide
+            "posSide": posSide.lower(),  # 这里添加 posSide
         }
 
-        print(" ----------> OKX print all order data", order_data)
+        print(" ----------> OKX print all order data in open order", order_data)
 
         headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
-        return response.json()
+        res = response.json()
+        if res["code"] == "0":
+            return {"success":True, "msg":"success"}
+        else:
+            return {"success":False, "msg":res}
 
-    def close_order(self, order_id: str):
-        path = f'/api/v5/trade/order/{order_id}/close'
-        url = f"{self.base_url}/api/v5/trade/order/{order_id}/close"
+    def close_order(self, trading_pair: TradingPair, amount: float, order_type: str):
+        path = '/api/v5/trade/order'
+        url = f"{self.base_url}{path}"
+        posSide = "long" if order_type == "sell" else "short":
+        order_data = {
+            "instId": "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency),
+            "tdMode": "cross",
+            "side": order_type.lower(),  # "buy" 或 "sell"
+            "ordType": "market",
+            "sz": str(amount),
+            "posSide": posSide,  # 这里添加 posSide
+        }
+        
         headers = self._get_headers('POST', path)
         response = requests.post(url, headers=headers)
         return response.json()
 
-    def query_order(self, order_id: str):
-        url = f"{self.base_url}/api/v5/trade/order/{order_id}"
-        headers = self._get_headers('GET', f'/api/v5/trade/order/{order_id}')
+    def query_order(self, order_id: str, trading_pair: TradingPair):
+        inst = "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency)
+        path = f'/api/v5/trade/order?ordId={order_id}&instId={inst}'
+        url = f"{self.base_url}{path}"
+        headers = self._get_headers('GET', path)
         response = requests.get(url, headers=headers)
         return response.json()
 
-    def reverse_order(self, order_id: str):
-        current_order = self.query_order(order_id)
-        
-        if 'data' in current_order and current_order['data']:
-            order_info = current_order['data'][0]
-            current_side = order_info['side']  # "buy" 或 "sell"
-            current_pos_side = order_info['posSide']  # 当前持仓方向
-            current_amount = order_info['sz']  # 当前订单的数量
-            
-            new_side = 'sell' if current_side == 'buy' else 'buy'
-            new_pos_side = 'long' if current_pos_side == 'short' else 'short'  # 反向持仓
-            
-            return self.place_order(order_info['instId'], float(current_amount), new_side, new_pos_side)
+    def reverse_order(self, order:ExchangeOrder):
+        query_res = self.query_order(order.exchange_orderId, order.trading_pair) #互相认证
+        if query_res.get('code') == "0":
+            data = json.loads(query_res.get('data'))
+            res_close = self.close_order(order.trading_pair, data["sz"], data["side"])
+            time.sleep(500)
+            new_side = "sell" if data["side"] == "buy" else "buy"
+            res_open = self.place_order(order.trading_pair,  data["sz"], new_side)
+            if res_open["success"] == True:
+                res_open["msg"] = "OKX reverse order successfully"
+            return res_open
         else:
-            return {"error": "Order not found or invalid order ID."}
+            return {"success":False, "msg":query_res.json()}
 
     def _get_headers(self, method: str, request_path: str, body=None):
         timestamp = self._get_timestamp()

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..models import ExchangeConfig, TradingPair
+from ..models import ExchangeConfig, TradingPair, ExchangeOrder
 
 class ExchangeAPI():
     def __init__(self, config: ExchangeConfig, baseUrl:str):
@@ -7,7 +7,7 @@ class ExchangeAPI():
         self.base_url = baseUrl
 
     @abstractmethod
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         pass
 
     @abstractmethod
@@ -15,11 +15,11 @@ class ExchangeAPI():
         pass
 
     @abstractmethod
-    def query_order(self, order_id: str):
+    def query_order(self, order_id: str, trading_pair: TradingPair):
         pass
 
     @abstractmethod
-    def reverse_order(self, order_id: str):
+    def reverse_order(self, order:ExchangeOrder):
         pass
 
     def _generate_signature(self):

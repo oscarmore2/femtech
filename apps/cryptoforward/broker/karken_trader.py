@@ -31,7 +31,7 @@ class KrakenAPI(ExchangeAPI):
         response = requests.post(url, headers=headers, data=order_data)
         return response.json()
 
-    def query_order(self, order_id: str):
+    def query_order(self, order_id: str, trading_pair: TradingPair):
         url = f"{self.base_url}/0/private/QueryOrders"
         order_data = {
             "txid": order_id
@@ -41,7 +41,7 @@ class KrakenAPI(ExchangeAPI):
         response = requests.post(url, headers=headers, data=order_data)
         return response.json()
 
-    def reverse_order(self, order_id: str):
+    def reverse_order(self, order:ExchangeOrder):
         current_order = self.query_order(order_id)
         
         if 'result' in current_order and current_order['result']:

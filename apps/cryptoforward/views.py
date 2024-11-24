@@ -2,7 +2,7 @@ from django.shortcuts import render
 import json
 from django.http import HttpResponse, HttpResponseRedirect
 from .formatMsg import ParseTradingFormat
-from .models import DepositAccount, ExcangeSignalTrading, ExchangeConfig, ExchangeOrder, TradingPair
+from .models import DepositAccount, ExcangeSignalTrading, ExchangeConfig, ExchangeOrder, TradingPair, TradingType
 from django_q.tasks import async_task, result
 from django.views.decorators.csrf import csrf_exempt
 import queue
@@ -123,8 +123,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
 
     # 检查是否有正在执行的订单
     ongoing_orders = ExchangeOrder.objects.filter(
-        trading_pair__finger_print=fingerPrint,
-        order_state=ExchangeOrder.State.FINISH
+        trading_pair__finger_print=fingerPrint
     )
 
     pair = TradingPair.objects.get(finger_print=fingerPrint)
@@ -132,22 +131,30 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
     if ongoing_orders.exists():
         for order in ongoing_orders:
             # 判断订单方向与 context["direction"] 是否一致
-            current_direction = order.trading_type  # 假设 trading_type 存储了订单方向
+            # TODO: 以后处理未完成的订单
             if current_direction != context["direction"]:
-                # 反转持仓方向
-                response = exchange_api.reverse_order(order.exchange_orderId)
-                if response.get('code') == 200:  # 假设响应中有 code 字段
-                    # 更新订单记录
-                    order.order_state = ExchangeOrder.State.REVERSED  # 假设有一个 REVERSED 状态
-                    order.trading_type = context["direction"]  # 更新方向为新的方向
-                    order.save()
-                    print(f"Order {order.exchange_orderId} reversed successfully.")
+                if not order.exchange_orderId == "-1":
+                    response = exchange_api.reverse_order(order.exchange_orderId)
+                    if response["success"] == True:
+                        print(f" Yeah! Order id {order.id} reverse successful")
+                    else:
+                        print(f" Order id {order.id} reverse have problem with {response["msg"]}")
                 else:
-                    print(f"Failed to reverse order {order.exchange_orderId}: {response}")
+                    print(f"Invaild exchange_orderId in order id {order.id}")
             else:
-                print(f"Current order direction matches context direction: {current_direction}")
-
+                print(f"Current order {order.id} direction matches context direction: {current_direction}")
     else:
+        ord_Type = "buy" if context["direction"] == "long" else "sell"
+        trade_type = TradingType.BUY_FUTURE_LOW if context["direction"] == "long" else TradingType.BUY_FUTURE_HIGH
+        order = ExchangeOrder.objects.create(
+            exchange_orderId="-1",
+            trading_pair=pair,
+            trading_type=trade_type,
+            order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
+            trading_type=context["direction"],  # 设置为当前方向
+            amount=context["amount"]
+        )
+        order.save()
         # 没有找到订单，进行下单操作
         data = {
             "amount": context["amount"],
@@ -164,16 +171,13 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             order_type= ord_Type,  # 确保为小写
             pos_side= context["direction"]  # 默认使用 LONG 或根据需要修改
         )
-        if response.get('code') == 200:  # 假设响应中有 code 字段
+        if response["success"] == True:  # 假设响应中有 code 字段
             # 更新订单记录
+            data = json.loads(response.get('data'))
             order_info = response  # 假设响应中包含订单信息
-            ExchangeOrder.objects.create(
-                exchange_orderId=order_info.get('id'),
-                trading_pair=fingerPrint,
-                order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
-                trading_type=context["direction"],  # 设置为当前方向
-                amount=context["amount"]
-            )
+            order.exchange_orderId = data["ordId"]
+            order.order_state = ExchangeOrder.State.FINISH
+            order.save()
             print("Order placed successfully:", order_info)
         else:
             print("Order placement failed:", response)

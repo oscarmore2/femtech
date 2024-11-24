@@ -8,7 +8,7 @@ from .trader import ExchangeAPI
 from ..models import TradingPair
 
 class BybitAPI(ExchangeAPI):
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         url = f"{self.base_url}/v2/private/order/create"
         order_data = {
             "symbol": trading_pair,
@@ -38,7 +38,7 @@ class BybitAPI(ExchangeAPI):
         response = requests.post(url, data=cancel_data)
         return response.json()
 
-    def query_order(self, order_id: str):
+    def query_order(self, order_id: str, trading_pair: TradingPair):
         url = f"{self.base_url}/v2/private/order"
         query_data = {
             "order_id": order_id,
@@ -50,7 +50,7 @@ class BybitAPI(ExchangeAPI):
         response = requests.get(url, params=query_data)
         return response.json()
 
-    def reverse_order(self, order_id: str):
+    def reverse_order(self, order:ExchangeOrder):
         current_order = self.query_order(order_id)
         
         if 'result' in current_order and current_order['result']:
