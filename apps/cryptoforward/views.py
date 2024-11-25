@@ -131,9 +131,12 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
 
     if ongoing_orders.exists():
         for order in ongoing_orders:
+            current_direction = "long"
+            if order.trading_type == TradingType.BUY_FUTURE_HIGH:
+                current_direction = "short"
             # 判断订单方向与 context["direction"] 是否一致
             # TODO: 以后处理未完成的订单
-            if current_direction != context["direction"]:
+            if current_direction != context["direction"].lower():
                 if not order.exchange_orderId == "-1":
                     response = exchange_api.reverse_order(order.exchange_orderId)
                     if response["success"] == True:

@@ -38,10 +38,11 @@ class BitgetAPI(ExchangeAPI):
 
         headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
+        res = response.json()
         if res["code"] == "0":
-            return {"success":True, "msg":"success"}
+            return {"success":True, "msg":"success", "data":res["data"]}
         else:
-            return {"success":False, "msg":res}
+            return {"success":False, "msg":response}
 
     def close_order(self, order_id: str):
         url = f"{self.base_url}/api/v1/order/{order_id}/close"
