@@ -171,7 +171,6 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             trading_pair= pair,
             amount=context["amount"],
             order_type= ord_Type,  # 确保为小写
-            pos_side= context["direction"]  # 默认使用 LONG 或根据需要修改
         )
         if response["success"] == True:  # 假设响应中有 code 字段
             # 更新订单记录

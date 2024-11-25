@@ -51,6 +51,7 @@ class BybitAPI(ExchangeAPI):
         return response.json()
 
     def reverse_order(self, order:ExchangeOrder):
+        return {"success":False, "msg":"not ready"}
         current_order = self.query_order(order_id)
         
         if 'result' in current_order and current_order['result']:
