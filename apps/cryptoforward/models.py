@@ -58,6 +58,7 @@ class ExchangeOrder(models.Model):
         OPEN = 1, _("打开")
         FINISH = 2, _("完成")
         FAILD = 3, _("失败")
+        REVERSE = 4, _("被反转")
     
     id = models.AutoField(primary_key=True)
     exchange_orderId = models.CharField(max_length=200, verbose_name="交易所订单Id")
@@ -70,7 +71,10 @@ class ExchangeOrder(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="交易创建时间")
     
     def __str__(self):
-        return self.exchange_orderId
+        if self.exchange == None:
+            return f"Null-{self.exchange_orderId}"
+        else:
+            return f"{self.exchange.name}-{self.exchange_orderId}"
     
 class ExchangeAccountInfo(models.Model):
     id = models.AutoField(primary_key=True)

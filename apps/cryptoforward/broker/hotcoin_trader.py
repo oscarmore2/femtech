@@ -9,7 +9,7 @@ import json
 from ..models import TradingPair
 
 class HotcoinAPI(ExchangeAPI):
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         url = f"{self.base_url}/api/v1/order"
         order_data = {
             "symbol": trading_pair,

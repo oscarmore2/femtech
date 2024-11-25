@@ -29,7 +29,7 @@ class OKXAPI(ExchangeAPI):
         response = requests.post(url, headers=headers, json=order_data)
         res = response.json()
         if res["code"] == "0":
-            return {"success":True, "msg":"success"}
+            return {"success":True, "msg":"success", "data":res.["data"]}
         else:
             return {"success":False, "msg":res}
 
@@ -45,7 +45,7 @@ class OKXAPI(ExchangeAPI):
             "sz": str(amount),
             "posSide": posSide,  # 这里添加 posSide
         }
-        
+        print(" ----------> OKX print all order data in close order", order_data)
         headers = self._get_headers('POST', path)
         response = requests.post(url, headers=headers)
         return response.json()
@@ -65,8 +65,24 @@ class OKXAPI(ExchangeAPI):
             res_close = self.close_order(order.trading_pair, data["sz"], data["side"])
             time.sleep(500)
             new_side = "sell" if data["side"] == "buy" else "buy"
+            trade_type = TradingType.BUY_FUTURE_LOW if new_side == "buy" else TradingType.BUY_FUTURE_HIGH
+            newOrder = ExchangeOrder.objects.create(
+                exchange_orderId="-1",
+                exchange=config.exchangeInfo
+                trading_pair=order.trading_pair,
+                trading_type=trade_type,
+                order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
+                amount=data["sz"]
+            )
+            newOrder.save()
             res_open = self.place_order(order.trading_pair,  data["sz"], new_side)
+            
             if res_open["success"] == True:
+                order.order_state = ExchangeOrder.State.REVERSE
+                order.save()
+                newOrder.exchange_orderId = res_open["data"]["ordId"]
+                newOrder.order_state = ExchangeOrder.State.FINISH
+                newOrder.save()
                 res_open["msg"] = "OKX reverse order successfully"
             return res_open
         else:

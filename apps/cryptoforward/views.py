@@ -124,7 +124,8 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
     # 检查是否有正在执行的订单
     ongoing_orders = ExchangeOrder.objects.filter(
         trading_pair__finger_print=fingerPrint
-    )
+        exchange=exchange_config.exchangeInfo
+    ).exclude(order_state=ExchangeOrder.State.REVERSE)
 
     pair = TradingPair.objects.get(finger_print=fingerPrint)
 
@@ -147,11 +148,11 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
         ord_Type = "buy" if context["direction"] == "long" else "sell"
         trade_type = TradingType.BUY_FUTURE_LOW if context["direction"] == "long" else TradingType.BUY_FUTURE_HIGH
         order = ExchangeOrder.objects.create(
+            exchange=exchange_config.exchangeInfo
             exchange_orderId="-1",
             trading_pair=pair,
             trading_type=trade_type,
-            order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
-            trading_type=context["direction"],  # 设置为当前方向
+            order_state=ExchangeOrder.State.OPEN,  # 订单状态为 FINISH
             amount=context["amount"]
         )
         order.save()
@@ -173,7 +174,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
         )
         if response["success"] == True:  # 假设响应中有 code 字段
             # 更新订单记录
-            data = json.loads(response.get('data'))
+            data = response["data"]
             order_info = response  # 假设响应中包含订单信息
             order.exchange_orderId = data["ordId"]
             order.order_state = ExchangeOrder.State.FINISH
