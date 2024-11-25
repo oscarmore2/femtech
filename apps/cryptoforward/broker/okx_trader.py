@@ -71,7 +71,8 @@ class OKXAPI(ExchangeAPI):
         if query_res.get('code') == "0":
             data = query_res["data"][0]
             res_close = self.close_order(order.trading_pair, data["sz"], data["side"])
-            if res_close["success"] == False: return
+            if res_close["success"] == False: 
+                return eturn {"success":False, "msg":res_close}
             # time.sleep(500)
             new_side = "sell" if data["side"] == "buy" else "buy"
             trade_type = TradingType.BUY_FUTURE_LOW if new_side == "buy" else TradingType.BUY_FUTURE_HIGH
