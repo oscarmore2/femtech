@@ -64,7 +64,7 @@ class OKXAPI(ExchangeAPI):
     def reverse_order(self, order:ExchangeOrder):
         query_res = self.query_order(order.exchange_orderId, order.trading_pair) #互相认证
         if query_res.get('code') == "0":
-            data = query_res["data"]
+            data = query_res["data"][0]
             res_close = self.close_order(order.trading_pair, data["sz"], data["side"])
             time.sleep(500)
             new_side = "sell" if data["side"] == "buy" else "buy"
