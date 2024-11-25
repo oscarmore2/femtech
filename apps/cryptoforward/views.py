@@ -115,6 +115,7 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
 
 def execute_trading_single_account(fingerPrint: str, exchange_config: object, context: object):
     # 创建 API 实例
+    print(f"欢迎来到{exchange_config.exchangeInfo.name}的交易")
     exchange_api = ExchangeAPIFactory.get_exchange_api(
         exchange_config.exchangeInfo.name,  # 使用 exchangeInfo 获取交易所名称
         exchange_config,  # 直接传递整个配置对象
