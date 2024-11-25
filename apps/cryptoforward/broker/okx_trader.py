@@ -49,7 +49,12 @@ class OKXAPI(ExchangeAPI):
         print(" ----------> OKX print all order data in close order", order_data)
         headers = self._get_headers('POST', path)
         response = requests.post(url, headers=headers)
-        return response.json()
+        res = response.json()
+        print(" ----------> OKX plcae order response", res)
+        if res["code"] == "0":
+            return {"success":True, "msg":"success", "data":res["data"][0]}
+        else:
+            return {"success":False, "msg":res}
 
     def query_order(self, order_id: str, trading_pair: TradingPair):
         inst = "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency)
@@ -66,7 +71,8 @@ class OKXAPI(ExchangeAPI):
         if query_res.get('code') == "0":
             data = query_res["data"][0]
             res_close = self.close_order(order.trading_pair, data["sz"], data["side"])
-            time.sleep(500)
+            if res_close["success"] == False: return
+            # time.sleep(500)
             new_side = "sell" if data["side"] == "buy" else "buy"
             trade_type = TradingType.BUY_FUTURE_LOW if new_side == "buy" else TradingType.BUY_FUTURE_HIGH
             newOrder = ExchangeOrder.objects.create(
