@@ -139,7 +139,8 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
                     if response["success"] == True:
                         print(f" Yeah! Order id {order.id} reverse successful")
                     else:
-                        print(f" Order id {order.id} reverse have problem with {response["msg"]}")
+                        msg = response["msg"]
+                        print(f" Order id {order.id} reverse have problem with {msg}")
                 else:
                     print(f"Invaild exchange_orderId in order id {order.id}")
             else:
