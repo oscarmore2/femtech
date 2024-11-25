@@ -107,11 +107,11 @@ def execute_account_trading(fingerPrint: str, accounts: object, context: object)
         exchange_configs = ExchangeConfig.objects.filter(account=account)
 
         for exchange_config in exchange_configs:
-            if not exchange_config.isActive:
+            if exchange_config.isActive:
+                async_task(execute_trading_single_account, fingerPrint=context["fingerPrint"], exchange_config=exchange_config, context=context)
+            else:
                 print("{0}未启用，跳过".format(exchange_config.name))
-                continue
             
-            async_task(execute_trading_single_account, fingerPrint=context["fingerPrint"], exchange_config=exchange_config, context=context)
 
 def execute_trading_single_account(fingerPrint: str, exchange_config: object, context: object):
     # 创建 API 实例
