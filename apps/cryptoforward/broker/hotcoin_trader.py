@@ -6,7 +6,7 @@ import hashlib
 import requests
 import json
 
-from ..models import TradingPair
+from ..models import TradingPair, ExchangeOrder
 
 class HotcoinAPI(ExchangeAPI):
     def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):

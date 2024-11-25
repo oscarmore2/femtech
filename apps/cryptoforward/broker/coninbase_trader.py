@@ -6,7 +6,7 @@ import requests
 import json
 
 from .trader import ExchangeAPI
-from ..models import TradingPair
+from ..models import TradingPair, ExchangeOrder
 
 class CoinbaseAPI(ExchangeAPI):
     def __init__(self, config):

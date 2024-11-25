@@ -29,7 +29,7 @@ class OKXAPI(ExchangeAPI):
         response = requests.post(url, headers=headers, json=order_data)
         res = response.json()
         if res["code"] == "0":
-            return {"success":True, "msg":"success", "data":res.["data"]}
+            return {"success":True, "msg":"success", "data":res["data"]}
         else:
             return {"success":False, "msg":res}
 

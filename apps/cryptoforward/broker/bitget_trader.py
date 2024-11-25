@@ -6,10 +6,10 @@ import json
 import base64
 
 from .trader import ExchangeAPI
-from ..models import TradingPair
+from ..models import TradingPair, ExchangeOrder
 
 class BitgetAPI(ExchangeAPI):
-    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str, pos_side: str):
+    def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         path = "/api/v2/mix/order/place-order"
         url = f"{self.base_url}{path}"
         symbol = ""

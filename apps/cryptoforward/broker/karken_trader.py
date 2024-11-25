@@ -5,7 +5,7 @@ import requests
 import json
 
 from .trader import ExchangeAPI
-from ..models import TradingPair
+from ..models import TradingPair, ExchangeOrder
 
 class KrakenAPI(ExchangeAPI):
     def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
