@@ -139,7 +139,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             # TODO: 以后处理未完成的订单
             if current_direction != context["direction"].lower():
                 if not order.exchange_orderId == "-1":
-                    response = exchange_api.reverse_order(order.exchange_orderId)
+                    response = exchange_api.reverse_order(order)
                     if response["success"] == True:
                         print(f" Yeah! Order id {order.id} reverse successful")
                     else:
