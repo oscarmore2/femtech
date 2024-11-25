@@ -50,7 +50,7 @@ class OKXAPI(ExchangeAPI):
         headers = self._get_headers('POST', path)
         response = requests.post(url, headers=headers)
         res = response.json()
-        print(" ----------> OKX plcae order response", res)
+        print(" ----------> OKX clase order response", res)
         if res["code"] == "0":
             return {"success":True, "msg":"success", "data":res["data"][0]}
         else:
@@ -70,6 +70,9 @@ class OKXAPI(ExchangeAPI):
         query_res = self.query_order(order.exchange_orderId, order.trading_pair) #互相认证
         if query_res.get('code') == "0":
             data = query_res["data"][0]
+            sz = data["sz"]
+            side = data["side"]
+            print(f" ----------> OKX check out sz {sz}, side {side}")
             res_close = self.close_order(order.trading_pair, data["sz"], data["side"])
             if res_close["success"] == False: 
                 return {"success":False, "msg":res_close}
@@ -82,7 +85,7 @@ class OKXAPI(ExchangeAPI):
                 trading_pair=order.trading_pair,
                 trading_type=trade_type,
                 order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
-                amount=data["sz"]
+                amount=Number(data["sz"])
             )
             newOrder.save()
             res_open = self.place_order(order.trading_pair,  data["sz"], new_side)
