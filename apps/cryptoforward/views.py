@@ -123,7 +123,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
 
     # 检查是否有正在执行的订单
     ongoing_orders = ExchangeOrder.objects.filter(
-        trading_pair__finger_print=fingerPrint
+        trading_pair__finger_print=fingerPrint,
         exchange=exchange_config.exchangeInfo
     ).exclude(order_state=ExchangeOrder.State.REVERSE)
 
@@ -148,7 +148,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
         ord_Type = "buy" if context["direction"] == "long" else "sell"
         trade_type = TradingType.BUY_FUTURE_LOW if context["direction"] == "long" else TradingType.BUY_FUTURE_HIGH
         order = ExchangeOrder.objects.create(
-            exchange=exchange_config.exchangeInfo
+            exchange=exchange_config.exchangeInfo,
             exchange_orderId="-1",
             trading_pair=pair,
             trading_type=trade_type,
