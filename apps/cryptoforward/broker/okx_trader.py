@@ -28,8 +28,9 @@ class OKXAPI(ExchangeAPI):
         headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers, json=order_data)
         res = response.json()
+        print(" ----------> OKX plcae order response:", res)
         if res["code"] == "0":
-            return {"success":True, "msg":"success", "data":res["data"]}
+            return {"success":True, "msg":"success", "data":res["data"][0]}
         else:
             return {"success":False, "msg":res}
 
