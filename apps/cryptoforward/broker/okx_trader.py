@@ -47,7 +47,7 @@ class OKXAPI(ExchangeAPI):
             "posSide": posSide,  # 这里添加 posSide
         }
         print(" ----------> OKX print all order data in close order", order_data)
-        headers = self._get_headers('POST', path)
+        headers = self._get_headers('POST', path, order_data)
         response = requests.post(url, headers=headers)
         res = response.json()
         print(" ----------> OKX clase order response", res)
