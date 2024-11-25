@@ -42,7 +42,7 @@ class BitgetAPI(ExchangeAPI):
         if res["code"] == "0":
             return {"success":True, "msg":"success", "data":res["data"]}
         else:
-            return {"success":False, "msg":response}
+            return {"success":False, "msg":res}
 
     def close_order(self, order_id: str):
         url = f"{self.base_url}/api/v1/order/{order_id}/close"
