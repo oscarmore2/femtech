@@ -176,6 +176,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             amount=context["amount"],
             order_type= ord_Type,  # 确保为小写
         )
+        print(f" -w- get response form make new order is {response}")
         if response["success"] == True:  # 假设响应中有 code 字段
             # 更新订单记录
             data = response["data"]
