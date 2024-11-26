@@ -48,7 +48,7 @@ class OKXAPI(ExchangeAPI):
         }
         print(" ----------> OKX print all order data in close order", order_data)
         headers = self._get_headers('POST', path, order_data)
-        response = requests.post(url, headers=headers)
+        response = requests.post(url, headers=headers, json=order_data)
         res = response.json()
         print(" ----------> OKX clase order response", res)
         if res["code"] == "0":
