@@ -151,7 +151,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
                 print(f"Current order {order.id} direction matches context direction: {current_direction}")
     else:
         ord_Type = "buy" if context["direction"] == "long" else "sell"
-        trade_type = TradingType.BUY_FUTURE_LOW if context["direction"] == "long" else TradingType.BUY_FUTURE_HIGH
+        trade_type = TradingType.BUY_FUTURE_LOW if context["direction"].lower() == "long" else TradingType.BUY_FUTURE_HIGH
         order = ExchangeOrder.objects.create(
             exchange=exchange_config.exchangeInfo,
             exchange_orderId="-1",
