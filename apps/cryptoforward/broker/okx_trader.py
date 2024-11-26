@@ -37,11 +37,12 @@ class OKXAPI(ExchangeAPI):
     def close_order(self, trading_pair: TradingPair, amount: float, order_type: str):
         path = '/api/v5/trade/order'
         url = f"{self.base_url}{path}"
-        posSide = "long" if order_type == "sell" else "short"
+        ord_type = "sell" if order_type.lower() == "buy" else "buy"
+        posSide = "long" if order_type.lower() == "sell" else "short"
         order_data = {
             "instId": "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency),
             "tdMode": "cross",
-            "side": order_type.lower(),  # "buy" 或 "sell"
+            "side": ord_type,  # "buy" 或 "sell"
             "ordType": "market",
             "sz": str(amount),
             "posSide": posSide,  # 这里添加 posSide
