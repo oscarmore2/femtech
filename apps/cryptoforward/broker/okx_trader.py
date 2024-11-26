@@ -7,7 +7,7 @@ import requests
 import datetime
 
 from .trader import ExchangeAPI
-from ..models import TradingPair, ExchangeOrder
+from ..models import TradingPair, ExchangeOrder, TradingType
 
 class OKXAPI(ExchangeAPI):
     def place_order(self, trading_pair: TradingPair, amount: float, order_type: str):
@@ -78,15 +78,15 @@ class OKXAPI(ExchangeAPI):
             if res_close["success"] == False: 
                 return {"success":False, "msg":res_close}
             # time.sleep(500)
-            new_side = "sell" if data["side"] == "buy" else "buy"
-            trade_type = TradingType.BUY_FUTURE_LOW if new_side == "buy" else TradingType.BUY_FUTURE_HIGH
+            new_side = "sell" if data["side"].lower() == "buy" else "buy"
+            trade_type = TradingType.BUY_FUTURE_LOW if data["side"].lower() == "buy" else TradingType.BUY_FUTURE_HIGH
             newOrder = ExchangeOrder.objects.create(
                 exchange_orderId="-1",
                 exchange=config.exchangeInfo,
                 trading_pair=order.trading_pair,
                 trading_type=trade_type,
                 order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
-                amount=Number(data["sz"])
+                amount=data["sz"]
             )
             newOrder.save()
             res_open = self.place_order(order.trading_pair,  data["sz"], new_side)
