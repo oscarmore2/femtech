@@ -82,7 +82,7 @@ class OKXAPI(ExchangeAPI):
             trade_type = TradingType.BUY_FUTURE_LOW if data["side"].lower() == "buy" else TradingType.BUY_FUTURE_HIGH
             newOrder = ExchangeOrder.objects.create(
                 exchange_orderId="-1",
-                exchange=config.exchangeInfo,
+                exchange=self.config.exchangeInfo,
                 trading_pair=order.trading_pair,
                 trading_type=trade_type,
                 order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
