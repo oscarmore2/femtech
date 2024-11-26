@@ -38,7 +38,7 @@ class OKXAPI(ExchangeAPI):
         path = '/api/v5/trade/order'
         url = f"{self.base_url}{path}"
         ord_type = "sell" if order_type.lower() == "buy" else "buy"
-        posSide = "long" if order_type.lower() == "sell" else "short"
+        posSide = "long" if order_type.lower() == "buy" else "short"
         order_data = {
             "instId": "{0}-{1}-SWAP".format(trading_pair.target_currency, trading_pair.source_currency),
             "tdMode": "cross",
