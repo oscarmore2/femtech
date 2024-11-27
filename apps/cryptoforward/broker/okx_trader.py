@@ -85,11 +85,12 @@ class OKXAPI(ExchangeAPI):
                 exchange=self.config.exchangeInfo,
                 trading_pair=order.trading_pair,
                 trading_type=trade_type,
-                related_config=self.config,
                 order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
                 amount=data["sz"]
             )
             newOrder.save()
+            self.config.order_list.add(newOrder)
+            self.config.save()
             res_open = self.place_order(order.trading_pair,  data["sz"], new_side)
             
             if res_open["success"] == True:

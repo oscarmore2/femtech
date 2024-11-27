@@ -157,11 +157,12 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             exchange_orderId="-1",
             trading_pair=pair,
             trading_type=trade_type,
-            related_config=exchange_config,
             order_state=ExchangeOrder.State.OPEN,  # 订单状态为 FINISH
             amount=context["amount"]
         )
         order.save()
+        exchange_config.order_list.add(order)
+        exchange_config.save()
         # 没有找到订单，进行下单操作
         data = {
             "amount": context["amount"],
