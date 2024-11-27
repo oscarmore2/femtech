@@ -212,7 +212,7 @@ def trade_API_view(request):
         txt = request.body.decode("utf-8")
         data = ParseTradingFormat(txt)
 
-        async_task(send_tg_notify, info=context)
+        async_task(send_tg_notify, info=data)
         dir = data["direction"]
         if dir.lower() != "willlong" or dir.lower() != "willshort":
             return resMsg("incoming data will be ignore: {0}".format(txt))
