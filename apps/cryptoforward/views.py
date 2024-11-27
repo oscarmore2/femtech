@@ -157,6 +157,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
             exchange_orderId="-1",
             trading_pair=pair,
             trading_type=trade_type,
+            related_config=exchange_config,
             order_state=ExchangeOrder.State.OPEN,  # 订单状态为 FINISH
             amount=context["amount"]
         )

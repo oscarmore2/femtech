@@ -85,6 +85,7 @@ class OKXAPI(ExchangeAPI):
                 exchange=self.config.exchangeInfo,
                 trading_pair=order.trading_pair,
                 trading_type=trade_type,
+                related_config=self.config,
                 order_state=ExchangeOrder.State.FINISH,  # 订单状态为 FINISH
                 amount=data["sz"]
             )

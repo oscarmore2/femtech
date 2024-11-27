@@ -67,6 +67,7 @@ class ExchangeOrder(models.Model):
     amount = models.FloatField(default=0.0, verbose_name="交易数量")
     leverge = models.FloatField(default=1.0, verbose_name="交易杠杆")
     order_state = models.IntegerField(choices=State, verbose_name="订单状态")
+    related_config = models.ForeignKey(ExchangeConfig, on_delete=models.CASCADE, related_name='order_config_pair', verbose_name="关联配置")
     trading_type = models.IntegerField(choices=TradingType, default=1, verbose_name="交易类型")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="交易创建时间")
     
