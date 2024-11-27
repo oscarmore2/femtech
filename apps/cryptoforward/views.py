@@ -214,7 +214,7 @@ def trade_API_view(request):
 
         async_task(send_tg_notify, info=data)
         dir = data["direction"]
-        if dir.lower() != "willlong" or dir.lower() != "willshort":
+        if dir.lower() == "willlong" or dir.lower() == "willshort":
             return resMsg("incoming data will be ignore: {0}".format(txt))
 
         if "fingerPrint" in data:
