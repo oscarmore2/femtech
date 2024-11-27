@@ -129,23 +129,24 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
 
     if ongoing_orders.exists():
         for order in ongoing_orders:
-            current_direction = "long"
-            if order.trading_type == TradingType.BUY_FUTURE_HIGH:
-                current_direction = "short"
-            # 判断订单方向与 context["direction"] 是否一致
-            # TODO: 以后处理未完成的订单
-            if current_direction != context["direction"].lower():
-                if not order.exchange_orderId == "-1":
-                    response = exchange_api.reverse_order(order)
-                    if response["success"] == True:
-                        print(f" Yeah! Order id {order.id} reverse successful")
+            if order.order_state == ExchangeOrder.State.FINISH:
+                current_direction = "long"
+                if order.trading_type == TradingType.BUY_FUTURE_HIGH:
+                    current_direction = "short"
+                # 判断订单方向与 context["direction"] 是否一致
+                # TODO: 以后处理未完成的订单
+                if current_direction != context["direction"].lower():
+                    if not order.exchange_orderId == "-1":
+                        response = exchange_api.reverse_order(order)
+                        if response["success"] == True:
+                            print(f" Yeah! Order id {order.id} reverse successful")
+                        else:
+                            msg = response["msg"]
+                            print(f" Order id {order.id} reverse have problem with {msg}")
                     else:
-                        msg = response["msg"]
-                        print(f" Order id {order.id} reverse have problem with {msg}")
+                        print(f"Invaild exchange_orderId in order id {order.id}")
                 else:
-                    print(f"Invaild exchange_orderId in order id {order.id}")
-            else:
-                print(f"Current order {order.id} direction matches context direction: {current_direction}")
+                    print(f"Current order {order.id} direction matches context direction: {current_direction}")
     else:
         ord_Type = "buy" if context["direction"] == "long" else "sell"
         trade_type = TradingType.BUY_FUTURE_LOW if context["direction"].lower() == "long" else TradingType.BUY_FUTURE_HIGH
