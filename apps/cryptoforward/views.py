@@ -188,8 +188,22 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
         else:
             print("Order placement failed:", response)
 
-def doAccountLogin():
-    pass
+def send_tg_notify(info:object):
+    ins = info["tick"]
+    msg = f"现在{ins}"
+    trand = info["direction"]
+    if trand.lower() == "long":
+        msg = msg + "肯定就要涨起来了，赶紧做多啊"
+    elif trand.lower() == "short":
+        msg = msg + "肯定就要跌下去了啊，还没做空的赶紧看手机了"
+    elif trand.lower() == "willlong":
+        msg = msg + "很可能就要涨起来了，赶紧看看手机留意点位哦"
+    elif trand.lower() == "willshort":
+        msg = msg + "很有可能就要跌了，做好准备了要做空了"
+    chatID = -4786771909
+    token = "7581473776:AAFSuBVl9v8pvHmNQ0tUVSL04clrDG4-dyA"
+    url = f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chatID}&text={msg}'
+    requests.get(url)
 
 # Create your views here.
 @csrf_exempt
@@ -197,6 +211,11 @@ def trade_API_view(request):
     if request.method == "POST":
         txt = request.body.decode("utf-8")
         data = ParseTradingFormat(txt)
+
+        async_task(send_tg_notify, info=context)
+        dir = data["direction"]
+        if dir.lower() != "willlong" or dir.lower() != "willshort":
+            return resMsg("incoming data will be ignore: {0}".format(txt))
 
         if "fingerPrint" in data:
             # 找到对应的 ExchangeSignalTrading
