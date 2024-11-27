@@ -123,7 +123,7 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
     )
 
     # 检查是否有正在执行的订单
-    ongoing_orders = exchange_config.order_list
+    ongoing_orders = exchange_config.order_list.all()
 
     pair = TradingPair.objects.get(finger_print=fingerPrint)
 
