@@ -51,31 +51,6 @@ class ExchangeChannel(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class ExchangeOrder(models.Model):
-    class State(models.IntegerChoices):
-        OPEN = 1, _("打开")
-        FINISH = 2, _("完成")
-        FAILD = 3, _("失败")
-        REVERSE = 4, _("被反转")
-    
-    id = models.AutoField(primary_key=True)
-    exchange_orderId = models.CharField(max_length=200, verbose_name="交易所订单Id")
-    exchange = models.ForeignKey(ExchangeChannel, blank=True, null=True, on_delete=models.CASCADE, related_name='exchange_order', verbose_name="关联交易所")
-    trading_pair = models.ForeignKey(TradingPair, on_delete=models.CASCADE, related_name='order_trading_pair', verbose_name="关联交易对")
-    amount = models.FloatField(default=0.0, verbose_name="交易数量")
-    leverge = models.FloatField(default=1.0, verbose_name="交易杠杆")
-    order_state = models.IntegerField(choices=State, verbose_name="订单状态")
-    related_config = models.ForeignKey(ExchangeConfig, on_delete=models.CASCADE, related_name='order_config_pair', verbose_name="关联配置")
-    trading_type = models.IntegerField(choices=TradingType, default=1, verbose_name="交易类型")
-    create_time = models.DateTimeField(auto_now_add=True, verbose_name="交易创建时间")
-    
-    def __str__(self):
-        if self.exchange == None:
-            return f"Null-{self.exchange_orderId}"
-        else:
-            return f"{self.exchange.name}-{self.exchange_orderId}"
     
 class ExchangeAccountInfo(models.Model):
     id = models.AutoField(primary_key=True)
@@ -157,3 +132,27 @@ class ExchangeConfig(models.Model):
 
     def __str__(self):
         return self.name if self.isActive else "{0}(未启用)".format(self.name)
+
+class ExchangeOrder(models.Model):
+    class State(models.IntegerChoices):
+        OPEN = 1, _("打开")
+        FINISH = 2, _("完成")
+        FAILD = 3, _("失败")
+        REVERSE = 4, _("被反转")
+    
+    id = models.AutoField(primary_key=True)
+    exchange_orderId = models.CharField(max_length=200, verbose_name="交易所订单Id")
+    exchange = models.ForeignKey(ExchangeChannel, blank=True, null=True, on_delete=models.CASCADE, related_name='exchange_order', verbose_name="关联交易所")
+    trading_pair = models.ForeignKey(TradingPair, on_delete=models.CASCADE, related_name='order_trading_pair', verbose_name="关联交易对")
+    amount = models.FloatField(default=0.0, verbose_name="交易数量")
+    leverge = models.FloatField(default=1.0, verbose_name="交易杠杆")
+    order_state = models.IntegerField(choices=State, verbose_name="订单状态")
+    related_config = models.ForeignKey(ExchangeConfig, on_delete=models.CASCADE, related_name='order_config_pair', verbose_name="关联配置")
+    trading_type = models.IntegerField(choices=TradingType, default=1, verbose_name="交易类型")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="交易创建时间")
+    
+    def __str__(self):
+        if self.exchange == None:
+            return f"Null-{self.exchange_orderId}"
+        else:
+            return f"{self.exchange.name}-{self.exchange_orderId}"
