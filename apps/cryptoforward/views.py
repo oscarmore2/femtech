@@ -188,8 +188,8 @@ def execute_trading_single_account(fingerPrint: str, exchange_config: object, co
         else:
             print("Order placement failed:", response)
 
-def send_tg_notify(info:object):
-    ins = info["tick"]
+def send_tg_notify (info: object):
+    ins = info["ticker"]
     msg = f"现在{ins}"
     trand = info["direction"]
     if trand.lower() == "long":
